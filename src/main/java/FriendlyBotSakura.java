@@ -150,7 +150,7 @@ public class FriendlyBotSakura {
                 else if (input.startsWith("todo")) {
                     String description = input.substring(5).trim();
                     if (description.isEmpty()) {
-                        throw new SakuraException("The description of a todo cannot be empty, please reenter!!!");
+                        throw new SakuraException("OOPS!!! The description of a todo cannot be empty.");
                     }
                     tasks.add(new ToDo(description));
                     System.out.println("____________________________________________________________");
@@ -192,20 +192,8 @@ public class FriendlyBotSakura {
                     System.out.println(" \uD83C\uDF37You now have " + tasks.size() + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 }
-                else if (input.startsWith("delete")) {
-                    int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                    if (index < 0 || index >= tasks.size()) {
-                        throw new SakuraException("That task number does not exist.");
-                    }
-                    Task removedTask = tasks.remove(index);
-                    System.out.println("____________________________________________________________");
-                    System.out.println(" \uD83C\uDF37I have removed this task:\uD83C\uDF37");
-                    System.out.println("   " + removedTask);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                    System.out.println("____________________________________________________________");
-                }
                 else {
-                    throw new SakuraException("I do not know what that means.\uD83C\uDF38\uD83D\uDE22");
+                    throw new SakuraException("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
             } catch (SakuraException e) {
                 System.out.println("____________________________________________________________");
