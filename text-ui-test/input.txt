@@ -6,11 +6,19 @@ mark 2
 list
 unmark 2
 list
-delete 3
 todo
 deadline do something
 deadline finish task /by
 event party /from 8pm /to
 event missingfields /to 5pm /from 3pm
 unknowncommand
+delete 1
+list
+mark 100
+unmark 0
+delete 99
+todo  
+deadline missingby
+event badformat /to 5pm /from 3pm
+foobar
 bye
