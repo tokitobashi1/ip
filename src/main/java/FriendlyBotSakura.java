@@ -1,105 +1,266 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.*;
+/**
+ * Custom Storage Class
+ */
+class Storage {
+    private String filePath;
 
-// Custom exception for Duke-specific errors
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> loading() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            return tasks;
+        }
+        try {
+            Scanner fileScanner = new Scanner(new File(filePath));
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                String[] parts = line.split(" \\| ");
+                String type = parts[0];
+                boolean isDone = parts[1].equals("1");
+                switch (type) {
+                    case "T":
+                        Task t = new ToDo(parts[2]);
+                        t.setDone(isDone);
+                        tasks.add(t);
+                        break;
+                    case "D":
+                        Task d = new Deadline(parts[2], parts[3]);
+                        d.setDone(isDone);
+                        tasks.add(d);
+                        break;
+                    case "E":
+                        Task e = new Event(parts[2], parts[3], parts[4]);
+                        e.setDone(isDone);
+                        tasks.add(e);
+                        break;
+                }
+            }
+            fileScanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found. Starting with empty list.");
+        }
+        return tasks;
+    }
+    public void save(ArrayList<Task> tasks) {
+        try {
+            File file = new File(filePath);
+            file.getParentFile().mkdirs(); // Ensure folder exists
+            PrintWriter writer = new PrintWriter(file);
+            for (Task t : tasks) {
+                writer.println(t.SavingFormat());
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error saving file: " + e.getMessage());
+        }
+    }
+
+}
+
+
+/**
+ * Custom exception for Sakura bot
+ */
 class SakuraException extends Exception {
+    /**
+     * Constructs a SakuraException Class
+     *
+     * @param message the message as a string
+     */
     public SakuraException(String message) {
         super(message);
     }
 }
 
-// Task class: Represents a single Task (Encapsulation)
+/**
+ * Represents a single Task with a description and completion status.
+ */
 class Task {
     private String description;
     private boolean Done;
 
+    /**
+     * Constructs a Task with the given description.
+     * @param description the string description of the task
+     */
     public Task(String description) {
         this.description = description;
         this.Done = false;
     }
 
+    /**
+     * Saves done status and description
+     */
+    public String SavingFormat() {
+        return (getDone() ? "1" : "0") + " | " + getDescription();
+    }
+    /**
+     * Returns the description of this task.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns whether this task is done via boolean variable
+     */
     public boolean getDone() {
         return Done;
     }
 
+    /**
+     * Updates the description of this task.
+     * @param description the new description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Sets the done status of this task.
+     */
     public void setDone(boolean done) {
         this.Done = done;
     }
 
+    /**
+     * Returns the status symbol for this task.
+     */
     public String getStatus() {
         return (Done ? "X" : " ");
     }
 
+    /**
+     * Marks this task as done.
+     */
     public void markAsDone() {
         this.Done = true;
     }
 
+    /**
+     * Marks this task as not done.
+     */
     public void NotDone() {
         this.Done = false;
     }
 
+    /**
+     * Returns a string representation of the task including status and description.
+     */
     @Override
     public String toString() {
         return "[" + getStatus() + "] " + description;
     }
 }
 
-// To_Do class subclass
+/**
+ * Represents a To-Do task.
+ */
 class ToDo extends Task {
+    /**
+     * Constructs a ToDo with the given description.
+     * @param description the description of the ToDo task
+     */
     public ToDo(String description) {
         super(description);
     }
 
+    /**
+     * Returns a string representation of the ToDo task.
+     * @return string including task type and details
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();
     }
+    @Override
+    public String SavingFormat() {
+        return "T | " + super.SavingFormat();
+    }
 }
 
-// Deadline subclass
+/**
+ * Represents a Deadline task: a subclass of Task class
+ */
 class Deadline extends Task {
     private String by;
 
+    /**
+     * Constructs a Deadline task with description and due date/time.
+     */
     public Deadline(String description, String by) {
         super(description);
         this.by = by;
     }
 
+    /**
+     * Returns a string representation of the Deadline task.
+     * @return string including task type, details, and due date/time
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by + ")";
     }
+    @Override
+    public String SavingFormat() {
+        return "D | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + by;
+    }
 }
 
-// Event subclass
+/**
+ * Represents an Event task with start and end times.
+ */
 class Event extends Task {
     private String from;
     private String to;
 
+    /**
+     * Constructs an Event task with description, start time, and end time.
+     * @param description the task description as a string
+     * @param from        the start time of the event as a string
+     * @param to          the end time of the event as a string
+     */
     public Event(String description, String from, String to) {
         super(description);
         this.from = from;
         this.to = to;
     }
 
+    /**
+     * Returns a string representation of the Event task.
+     * @return string including task type, details, start time, and end time
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
+    @Override
+    public String SavingFormat() {
+        return "E | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + from + " | " + to;
+    }
 }
 
+/**
+ * FriendlyBotSakura is a simple flower-themed task manager bot.
+ */
 public class FriendlyBotSakura {
+
+    /**
+     * The main entry point of the FriendlyBotSakura bot application.
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>(); // store tasks here
+        Storage storage = new Storage("./data/SakuraStorage.txt");
+        ArrayList<Task> tasks = storage.loading();
 
         System.out.println("____________________________________________________________");
         System.out.println("Hi, I am your friendly bot \uD83C\uDF38Sakura\uD83C\uDF38, feel free to let me know what you need!");
@@ -131,6 +292,7 @@ public class FriendlyBotSakura {
                         throw new SakuraException("That task number does not exist.");
                     }
                     tasks.get(index).markAsDone();
+                    storage.save(tasks);  // Save after change
                     System.out.println("____________________________________________________________");
                     System.out.println(" \uD83C\uDF37Nice! I've marked this task as done:");
                     System.out.println("   " + tasks.get(index));
@@ -142,6 +304,7 @@ public class FriendlyBotSakura {
                         throw new SakuraException("That task number does not exist.");
                     }
                     tasks.get(index).NotDone();
+                    storage.save(tasks);  // Save after change
                     System.out.println("____________________________________________________________");
                     System.out.println(" \uD83C\uDF37I have marked this task as not done:");
                     System.out.println("   " + tasks.get(index));
@@ -153,6 +316,7 @@ public class FriendlyBotSakura {
                         throw new SakuraException("The description of a todo cannot be empty, please reenter!!!");
                     }
                     tasks.add(new ToDo(description));
+                    storage.save(tasks);  // Save after change
                     System.out.println("____________________________________________________________");
                     System.out.println(" \uD83C\uDF37I have added this task:");
                     System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -166,6 +330,7 @@ public class FriendlyBotSakura {
                         throw new SakuraException("Please use the actual format properly!");
                     }
                     tasks.add(new Deadline(parts[0].trim(), parts[1].trim()));
+                    storage.save(tasks);  // Save after change
                     System.out.println("____________________________________________________________");
                     System.out.println("  \uD83C\uDF37I have added this task:");
                     System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -186,6 +351,7 @@ public class FriendlyBotSakura {
                         throw new SakuraException("Description, start time and end time cannot be empty.");
                     }
                     tasks.add(new Event(description1, from, to));
+                    storage.save(tasks);  // Save after change
                     System.out.println("____________________________________________________________");
                     System.out.println("  \uD83C\uDF37I have added this task:");
                     System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -198,6 +364,7 @@ public class FriendlyBotSakura {
                         throw new SakuraException("That task number does not exist.");
                     }
                     Task removedTask = tasks.remove(index);
+                    storage.save(tasks);  // Save after change
                     System.out.println("____________________________________________________________");
                     System.out.println(" \uD83C\uDF37I have removed this task:\uD83C\uDF37");
                     System.out.println("   " + removedTask);
