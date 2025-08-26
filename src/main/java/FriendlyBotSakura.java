@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 /**
  * Custom Storage Class
  */
@@ -32,9 +35,14 @@ class Storage {
                         tasks.add(t);
                         break;
                     case "D":
-                        Task d = new Deadline(parts[2], parts[3]);
-                        d.setDone(isDone);
-                        tasks.add(d);
+                        // parts[3] is the date string in yyyy-MM-dd format
+                        try {
+                            Task d = new Deadline(parts[2], parts[3]);
+                            d.setDone(isDone);
+                            tasks.add(d);
+                        } catch (SakuraException e) {
+                            System.out.println("Error loading deadline task: " + e.getMessage());
+                        }
                         break;
                     case "E":
                         Task e = new Event(parts[2], parts[3], parts[4]);
@@ -191,29 +199,41 @@ class ToDo extends Task {
  * Represents a Deadline task: a subclass of Task class
  */
 class Deadline extends Task {
-    private String by;
-
+    private LocalDate by;
+    private static final DateTimeFormatter INPUT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter OUTPUT = DateTimeFormatter.ofPattern("MMM dd yyyy");
     /**
      * Constructs a Deadline task with description and due date/time.
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, String byString) throws SakuraException {
         super(description);
-        this.by = by;
+        try {
+            this.by = LocalDate.parse(byString, INPUT);
+        } catch (DateTimeParseException e) {
+            throw new SakuraException("Invalid date format! Please use yyyy-MM-dd");
+        }
     }
-
     /**
      * Returns a string representation of the Deadline task.
      * @return string including task type, details, and due date/time
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+        return "[D]" + super.toString() + " (by: " + by.format(OUTPUT) + ")";
     }
+
     @Override
     public String SavingFormat() {
-        return "D | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + by;
+        // Save in yyyy-MM-dd format so it can be parsed back properly
+        return "D | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + by.format(INPUT);
+    }
+
+    public LocalDate getBy() {
+        return by;
     }
 }
+
+
 
 /**
  * Represents an Event task with start and end times.
@@ -259,7 +279,7 @@ public class FriendlyBotSakura {
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Storage storage = new Storage("./data/SakuraStorage.txt");
+        Storage storage = new Storage("./data/SakuraStorage.txt");  
         ArrayList<Task> tasks = storage.loading();
 
         System.out.println("____________________________________________________________");
@@ -289,10 +309,10 @@ public class FriendlyBotSakura {
                 else if (input.startsWith("mark")) {
                     int index = Integer.parseInt(input.substring(5)) - 1;
                     if (index < 0 || index >= tasks.size()) {
-                        throw new SakuraException("That task number does not exist.");
+                        throw new SakuraException("\uD83C\uDF38That task number does not exist.\uD83C\uDF38");
                     }
                     tasks.get(index).markAsDone();
-                    storage.save(tasks);  // Save after change
+                    storage.save(tasks);
                     System.out.println("____________________________________________________________");
                     System.out.println(" \uD83C\uDF37Nice! I've marked this task as done:");
                     System.out.println("   " + tasks.get(index));
@@ -301,10 +321,10 @@ public class FriendlyBotSakura {
                 else if (input.startsWith("unmark")) {
                     int index = Integer.parseInt(input.substring(7)) - 1;
                     if (index < 0 || index >= tasks.size()) {
-                        throw new SakuraException("That task number does not exist.");
+                        throw new SakuraException("\uD83C\uDF38That task number does not exist.\uD83C\uDF38");
                     }
                     tasks.get(index).NotDone();
-                    storage.save(tasks);  // Save after change
+                    storage.save(tasks);
                     System.out.println("____________________________________________________________");
                     System.out.println(" \uD83C\uDF37I have marked this task as not done:");
                     System.out.println("   " + tasks.get(index));
@@ -313,10 +333,10 @@ public class FriendlyBotSakura {
                 else if (input.startsWith("todo")) {
                     String description = input.substring(5).trim();
                     if (description.isEmpty()) {
-                        throw new SakuraException("The description of a todo cannot be empty, please reenter!!!");
+                        throw new SakuraException("\uD83C\uDF38The description of a todo cannot be empty, please reenter!!!\uD83C\uDF38");
                     }
                     tasks.add(new ToDo(description));
-                    storage.save(tasks);  // Save after change
+                    storage.save(tasks);
                     System.out.println("____________________________________________________________");
                     System.out.println(" \uD83C\uDF37I have added this task:");
                     System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -327,10 +347,15 @@ public class FriendlyBotSakura {
                     String The_Rest = input.substring(9).trim();
                     String[] parts = The_Rest.split(" /by ", 2);
                     if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-                        throw new SakuraException("Please use the actual format properly!");
+                        throw new SakuraException("\uD83C\uDF38Please use the actual format properly!\uD83C\uDF38");
                     }
-                    tasks.add(new Deadline(parts[0].trim(), parts[1].trim()));
-                    storage.save(tasks);  // Save after change
+                    String description = parts[0].trim();
+                    String byString = parts[1].trim();
+
+                    Deadline newDeadline = new Deadline(description, byString);
+                    tasks.add(newDeadline);
+
+                    storage.save(tasks);
                     System.out.println("____________________________________________________________");
                     System.out.println("  \uD83C\uDF37I have added this task:");
                     System.out.println("   " + tasks.get(tasks.size() - 1));
@@ -342,13 +367,13 @@ public class FriendlyBotSakura {
                     int fromIndex = The_Rest1.indexOf(" /from ");
                     int toIndex = The_Rest1.indexOf(" /to ");
                     if (fromIndex == -1 || toIndex == -1 || fromIndex >= toIndex) {
-                        throw new SakuraException("Please use the actual format properly!");
+                        throw new SakuraException("\uD83C\uDF38Please use the actual format properly!\uD83C\uDF38");
                     }
                     String description1 = The_Rest1.substring(0, fromIndex).trim();
                     String from = The_Rest1.substring(fromIndex + 7, toIndex).trim();
                     String to = The_Rest1.substring(toIndex + 5).trim();
                     if (description1.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        throw new SakuraException("Description, start time and end time cannot be empty.");
+                        throw new SakuraException("\uD83C\uDF38Description, start time and end time cannot be empty.\uD83C\uDF38");
                     }
                     tasks.add(new Event(description1, from, to));
                     storage.save(tasks);  // Save after change
@@ -361,7 +386,7 @@ public class FriendlyBotSakura {
                 else if (input.startsWith("delete")) {
                     int index = Integer.parseInt(input.substring(7).trim()) - 1;
                     if (index < 0 || index >= tasks.size()) {
-                        throw new SakuraException("That task number does not exist.");
+                        throw new SakuraException("\uD83C\uDF38That task number does not exist.\uD83C\uDF38");
                     }
                     Task removedTask = tasks.remove(index);
                     storage.save(tasks);  // Save after change
