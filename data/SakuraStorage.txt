@@ -1,0 +1,4 @@
+T | 0 | Read book
+D | 0 | Submit report | 2023-08-20
+E | 0 | Team meeting | 14:00 | 15:30
+E | 0 | Conference | 09:00 | 08:00

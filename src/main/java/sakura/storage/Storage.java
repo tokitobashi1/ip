@@ -57,6 +57,14 @@ public class Storage {
         }
         return tasks;
     }
+    public void clear() {
+        try (FileWriter writer = new FileWriter(filePath, false)) { // overwrite
+            writer.write(""); // clear contents
+        } catch (IOException e) {
+            System.out.println("Error clearing storage file: " + e.getMessage());
+        }
+    }
+
     public void save(ArrayList<Task> tasks) {
         try {
             File file = new File(filePath);
