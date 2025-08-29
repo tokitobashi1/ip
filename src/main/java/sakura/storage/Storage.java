@@ -9,11 +9,18 @@ import java.util.*;
  */
 public class Storage {
     private String filePath;
-
+    /**
+     * Constructs a Storage object with the given file path.
+     *
+     * @param filePath The path to the storage file.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
-
+    /**
+     * Loads tasks from the storage file.
+     * @return An ArrayList of tasks loaded from the file.
+     */
     public ArrayList<Task> loading() {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -57,6 +64,10 @@ public class Storage {
         }
         return tasks;
     }
+    /**
+     * Clears all contents of the storage file.
+     * If the file does not exist, it is created automatically.
+     */
     public void clear() {
         try (FileWriter writer = new FileWriter(filePath, false)) { // overwrite
             writer.write(""); // clear contents
