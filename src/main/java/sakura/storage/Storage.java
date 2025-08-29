@@ -1,8 +1,18 @@
 package sakura.storage;
 
-import sakura.task.*;
-import java.io.*;
-import java.util.*;
+import sakura.task.Task;
+import sakura.task.ToDo;
+import sakura.task.Deadline;
+import sakura.task.Event;
+import sakura.task.SakuraException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Custom Storage Class
@@ -14,13 +24,20 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public ArrayList<Task> loading() {
+    /**
+     * Loads tasks from the storage file.
+     *
+     * @return list of tasks loaded from file
+     */
+    public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
+
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             return tasks;
         }
+
         try {
             Scanner fileScanner = new Scanner(new File(filePath));
             while (fileScanner.hasNextLine()) {
@@ -28,26 +45,30 @@ public class Storage {
                 String[] parts = line.split(" \\| ");
                 String type = parts[0];
                 boolean isDone = parts[1].equals("1");
+
                 switch (type) {
                     case "T":
-                        Task t = new ToDo(parts[2]);
-                        t.setDone(isDone);
-                        tasks.add(t);
+                        Task todo = new ToDo(parts[2]);
+                        todo.setDone(isDone);
+                        tasks.add(todo);
                         break;
                     case "D":
                         // parts[3] is the date string in yyyy-MM-dd format
                         try {
-                            Task d = new Deadline(parts[2], parts[3]);
-                            d.setDone(isDone);
-                            tasks.add(d);
+                            Task deadline = new Deadline(parts[2], parts[3]);
+                            deadline.setDone(isDone);
+                            tasks.add(deadline);
                         } catch (SakuraException e) {
                             System.out.println("Error loading deadline task: " + e.getMessage());
                         }
                         break;
                     case "E":
-                        Task e = new Event(parts[2], parts[3], parts[4]);
-                        e.setDone(isDone);
-                        tasks.add(e);
+                        Task event = new Event(parts[2], parts[3], parts[4]);
+                        event.setDone(isDone);
+                        tasks.add(event);
+                        break;
+                    default:
+                        // ignore unknown task types
                         break;
                 }
             }
@@ -55,10 +76,12 @@ public class Storage {
         } catch (FileNotFoundException e) {
             System.out.println("File not found. Starting with empty list.");
         }
+
         return tasks;
     }
+
     public void clear() {
-        try (FileWriter writer = new FileWriter(filePath, false)) { // overwrite
+        try (FileWriter writer = new FileWriter(filePath, false)) {
             writer.write(""); // clear contents
         } catch (IOException e) {
             System.out.println("Error clearing storage file: " + e.getMessage());
@@ -68,11 +91,13 @@ public class Storage {
     public void save(ArrayList<Task> tasks) {
         try {
             File file = new File(filePath);
-            file.getParentFile().mkdirs(); // Ensure folder exists
+            file.getParentFile().mkdirs(); // ensure folder exists
             PrintWriter writer = new PrintWriter(file);
-            for (Task t : tasks) {
-                writer.println(t.SavingFormat());
+
+            for (Task task : tasks) {
+                writer.println(task.SavingFormat());
             }
+
             writer.close();
         } catch (IOException e) {
             System.out.println("Error saving file: " + e.getMessage());

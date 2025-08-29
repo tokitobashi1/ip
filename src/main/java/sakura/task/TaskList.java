@@ -1,7 +1,8 @@
 package sakura.task;
 
+import java.util.ArrayList;
+
 import sakura.storage.Storage;
-import java.util.*;
 
 /**
  * Manages the list of tasks and operations on them.
@@ -12,7 +13,7 @@ public class TaskList {
 
     public TaskList(Storage storage) {
         this.storage = storage;
-        this.tasks = storage.loading();
+        this.tasks = storage.load();
     }
 
     public ArrayList<Task> getTasks() {
@@ -45,7 +46,7 @@ public class TaskList {
         if (index < 0 || index >= tasks.size()) {
             throw new SakuraException("\uD83C\uDF38That task number does not exist.\uD83C\uDF38");
         }
-        tasks.get(index).NotDone();
+        tasks.get(index).notDone();
         storage.save(tasks);
     }
 }

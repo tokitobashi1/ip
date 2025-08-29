@@ -4,6 +4,7 @@ package sakura.task;
  * Represents a To-Do task.
  */
 public class ToDo extends Task {
+
     /**
      * Constructs a ToDo with the given description.
      *
