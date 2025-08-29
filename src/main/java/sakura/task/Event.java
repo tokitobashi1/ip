@@ -10,9 +10,9 @@ public class Event extends Task {
     /**
      * Constructs an Event task with description, start time, and end time.
      *
-     * @param description the task description as a string
-     * @param from        the start time of the event as a string
-     * @param to          the end time of the event as a string
+     * @param description the task description
+     * @param from the start time of the event
+     * @param to the end time of the event
      */
     public Event(String description, String from, String to) {
         super(description);
@@ -30,8 +30,13 @@ public class Event extends Task {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
 
-    @Override
-    public String SavingFormat() {
-        return "E | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + from + " | " + to;
+    /**
+     * Returns the storage string format of the Event task.
+     *
+     * @return a formatted string for saving the event in storage
+     */
+    public String savingFormat() {
+        return "E | " + (getDone() ? "1" : "0") + " | "
+                + getDescription() + " | " + from + " | " + to;
     }
 }
