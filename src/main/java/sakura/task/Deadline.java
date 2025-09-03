@@ -39,12 +39,18 @@ public class Deadline extends Task {
         return "[D]" + super.toString() + " (by: " + by.format(OUTPUT) + ")";
     }
 
+<<<<<<< HEAD
     /**
      * Returns a formatted string for saving this task to storage.
      *
      * @return formatted string for storage
      */
     public String savingFormat() {
+=======
+    @Override
+    public String savingFormat() {
+        // Save in yyyy-MM-dd format so it can be parsed back properly
+>>>>>>> branch-Level-10
         return "D | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + by.format(INPUT);
     }
 

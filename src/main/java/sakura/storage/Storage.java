@@ -1,10 +1,18 @@
 package sakura.storage;
 
+<<<<<<< HEAD
 import sakura.task.Task;
 import sakura.task.ToDo;
 import sakura.task.Deadline;
 import sakura.task.Event;
 import sakura.task.SakuraException;
+=======
+import sakura.task.Deadline;
+import sakura.task.Event;
+import sakura.task.SakuraException;
+import sakura.task.Task;
+import sakura.task.ToDo;
+>>>>>>> branch-Level-10
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,18 +23,29 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Custom Storage Class
+ * Custom Storage Class for saving and loading tasks.
  */
 public class Storage {
+
+    /** Path of the file to load and save tasks. */
     private String filePath;
+<<<<<<< HEAD
     /**
      * Constructs a Storage object with the given file path.
      *
      * @param filePath The path to the storage file.
+=======
+
+    /**
+     * Constructs a Storage object for the specified file path.
+     *
+     * @param filePath The path of the file to load and save tasks.
+>>>>>>> branch-Level-10
      */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
     /**
      * Loads tasks from the storage file.
@@ -42,6 +61,18 @@ public class Storage {
      */
     public ArrayList<Task> load() {
 >>>>>>> branch-A-CodingStandard
+=======
+
+    /**
+     * Loads tasks from the storage file into an ArrayList of {@link Task}.
+     * <p>
+     * Supports ToDo, Deadline, and Event tasks. If the file does not exist,
+     * an empty task list is returned.
+     *
+     * @return An ArrayList containing tasks loaded from the file.
+     */
+    public ArrayList<Task> loadTasks() {
+>>>>>>> branch-Level-10
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
 
@@ -50,8 +81,12 @@ public class Storage {
             return tasks;
         }
 
+<<<<<<< HEAD
         try {
             Scanner fileScanner = new Scanner(new File(filePath));
+=======
+        try (Scanner fileScanner = new Scanner(file)) {
+>>>>>>> branch-Level-10
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] parts = line.split(" \\| ");
@@ -59,6 +94,7 @@ public class Storage {
                 boolean isDone = parts[1].equals("1");
 
                 switch (type) {
+<<<<<<< HEAD
                     case "T":
                         Task todo = new ToDo(parts[2]);
                         todo.setDone(isDone);
@@ -66,6 +102,14 @@ public class Storage {
                         break;
                     case "D":
                         // parts[3] is the date string in yyyy-MM-dd format
+=======
+                    case "T" -> {
+                        Task todo = new ToDo(parts[2]);
+                        todo.setDone(isDone);
+                        tasks.add(todo);
+                    }
+                    case "D" -> {
+>>>>>>> branch-Level-10
                         try {
                             Task deadline = new Deadline(parts[2], parts[3]);
                             deadline.setDone(isDone);
@@ -73,6 +117,7 @@ public class Storage {
                         } catch (SakuraException e) {
                             System.out.println("Error loading deadline task: " + e.getMessage());
                         }
+<<<<<<< HEAD
                         break;
                     case "E":
                         Task event = new Event(parts[2], parts[3], parts[4]);
@@ -82,15 +127,24 @@ public class Storage {
                     default:
                         // ignore unknown task types
                         break;
+=======
+                    }
+                    case "E" -> {
+                        Task event = new Event(parts[2], parts[3], parts[4]);
+                        event.setDone(isDone);
+                        tasks.add(event);
+                    }
+                    default -> System.out.println("Unknown task type: " + type);
+>>>>>>> branch-Level-10
                 }
             }
-            fileScanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found. Starting with empty list.");
         }
 
         return tasks;
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
     /**
      * Clears all contents of the storage file.
@@ -99,6 +153,14 @@ public class Storage {
 =======
 
 >>>>>>> branch-A-CodingStandard
+=======
+
+    /**
+     * Clears the contents of the storage file.
+     * This method overwrites the existing file with an empty string,
+     * effectively removing all saved tasks.
+     */
+>>>>>>> branch-Level-10
     public void clear() {
         try (FileWriter writer = new FileWriter(filePath, false)) {
             writer.write(""); // clear contents
@@ -107,9 +169,17 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves a list of tasks to the storage file.
+     * <p>
+     * Each task is written in a specific format.
+     *
+     * @param tasks The ArrayList of tasks to save.
+     */
     public void save(ArrayList<Task> tasks) {
         try {
             File file = new File(filePath);
+<<<<<<< HEAD
             file.getParentFile().mkdirs(); // ensure folder exists
             PrintWriter writer = new PrintWriter(file);
 
@@ -118,6 +188,15 @@ public class Storage {
             }
 
             writer.close();
+=======
+            file.getParentFile().mkdirs(); // Ensure folder exists
+
+            try (PrintWriter writer = new PrintWriter(file)) {
+                for (Task task : tasks) {
+                    writer.println(task.savingFormat());
+                }
+            }
+>>>>>>> branch-Level-10
         } catch (IOException e) {
             System.out.println("Error saving file: " + e.getMessage());
         }

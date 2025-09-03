@@ -18,7 +18,7 @@ public class TaskList {
      */
     public TaskList(Storage storage) {
         this.storage = storage;
-        this.tasks = storage.loading();
+        this.tasks = storage.loadTasks();
     }
 
     /**
@@ -76,6 +76,11 @@ public class TaskList {
 
     /**
      * Marks the task at the given index as not done and saves the list.
+<<<<<<< HEAD
+=======
+     *
+     * @param index Index of the task to mark as not done.
+>>>>>>> branch-Level-10
      * @throws SakuraException If the index is invalid.
      */
     public void markTaskNotDone(int index) throws SakuraException {
@@ -87,16 +92,27 @@ public class TaskList {
         tasks.get(index).NotDone();
         storage.save(tasks);
     }
+<<<<<<< HEAD
 
     /**
      * Returns a list of tasks whose description contains the given keyword.
+=======
+    /**
+     * Returns a list of tasks whose description contains the given keyword.
+     *
+     * @param keyword The keyword to search for.
+>>>>>>> branch-Level-10
      * @return ArrayList of matching tasks.
      */
     public ArrayList<Task> findTasks(String keyword) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         for (Task task : tasks) {
+<<<<<<< HEAD
             if (task.getDescription().toLowerCase()
                     .contains(keyword.toLowerCase())) {
+=======
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+>>>>>>> branch-Level-10
                 matchingTasks.add(task);
             }
         }

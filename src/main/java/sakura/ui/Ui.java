@@ -1,5 +1,6 @@
 package sakura.ui;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Scanner;
 import sakura.task.Deadline;
@@ -8,6 +9,10 @@ import sakura.task.SakuraException;
 import sakura.task.Task;
 import sakura.task.TaskList;
 import sakura.task.ToDo;
+=======
+import java.util.*;
+import sakura.task.*;
+>>>>>>> branch-Level-10
 
 /**
  * Handles all user interaction and input parsing for the Sakura task manager.

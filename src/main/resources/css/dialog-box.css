@@ -1,0 +1,53 @@
+/* Base dialog bubble styling */
+.label {
+    -fx-background-color: linear-gradient(
+        to bottom right,
+        rgba(0, 255, 191, 0.90),
+        rgba(0, 221, 255, 0.90)
+    );
+    -fx-border-color: #d55e00 #009e73 #cc79a7 #0072b2;
+    -fx-border-width: 2px;
+    -fx-background-radius: 1em 1em 0 1em;
+    -fx-border-radius: 1em 1em 0 1em;
+    -fx-padding: 6px;
+    -fx-border-insets: 0px 7px 0px 7px;
+    -fx-background-insets: 0px 7px 0px 7px;
+    -fx-text-fill: black;           /* default text color for bubbles */
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+}
+
+/* User-only text color (apply to user bubbles only) */
+.user-label {
+    -fx-text-fill: #1a73e8;   /* blue for user text — change if you like */
+    -fx-font-weight: bold;
+}
+
+/* Ensure user color wins if the node also has an id */
+#dialog.user-label {
+    -fx-text-fill: #1a73e8;
+}
+
+/* Avatar / display picture styling */
+#displayPicture {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0.5, 3, 3);
+    -fx-padding: 2px;
+}
+
+/* Spacing helper for HBox containing label + image */
+.fx-hbox > .label {
+    -fx-margin: 0 6 0 6;
+}
+
+<Label fx:id="dialog"
+       text="Label"
+       wrapText="true"
+       minHeight="-Infinity"
+       style="-fx-text-fill: #1a73e8;">
+    <HBox.margin>
+        <Insets left="7.0" right="7.0"/>
+    </HBox.margin>
+    <padding>
+        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0"/>
+    </padding>
+</Label>

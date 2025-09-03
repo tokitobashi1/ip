@@ -30,6 +30,7 @@ public class Event extends Task {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
 
+<<<<<<< HEAD
     /**
      * Returns the storage string format of the Event task.
      *
@@ -38,5 +39,10 @@ public class Event extends Task {
     public String savingFormat() {
         return "E | " + (getDone() ? "1" : "0") + " | "
                 + getDescription() + " | " + from + " | " + to;
+=======
+    @Override
+    public String savingFormat() {
+        return "E | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + from + " | " + to;
+>>>>>>> branch-Level-10
     }
 }
