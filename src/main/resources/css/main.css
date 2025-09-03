@@ -1,0 +1,76 @@
+/* src/main/resources/css/main.css */
+
+/* Root background (image path is relative to this CSS file: ../images/background.jpg) */
+.root {
+    main-color: rgb(237, 255, 242);
+    -fx-background-color: main-color;
+
+    /* Enable background image (make sure file exists at src/main/resources/images/background.jpg) */
+    -fx-background-image: url("../images/background.jpg");
+    -fx-background-size: cover;          /* cover | stretch | <width> <height> */
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+/* Let the background image show through */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* TextField styling */
+.text-field {
+    -fx-background-color: #d9ffe2;
+    -fx-font: 20px "Arial";
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 6px 8px;
+}
+
+/* Button styling and states */
+.button {
+    -fx-background-color: mediumspringgreen;
+    -fx-font: italic bold 16px "Arial";
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-padding: 6px 10px;
+}
+
+.button:hover {
+    -fx-background-color: cyan;
+    -fx-font-size: 18px;
+}
+
+.button:pressed {
+    -fx-background-color: orange;
+    -fx-font-size: 20px;
+}
+
+/* Scrollbar styling */
+.scroll-bar {
+    -fx-font-size: 10px;      /* visual width */
+    -fx-background-color: main-color;
+    -fx-padding: 0.25em;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #ff9cb4;
+    -fx-background-radius: 1em;
+}
+
+/* Hide increment/decrement buttons */
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+/* Utility: small spacing for VBox dialog container (optional) */
+#dialogContainer {
+    -fx-spacing: 8px;
+    -fx-padding: 8px;
+}

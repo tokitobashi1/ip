@@ -1,6 +1,5 @@
 package sakura.ui;
 
-
 import java.util.*;
 import sakura.task.*;
 
@@ -61,6 +60,7 @@ public class Ui {
                 System.out.println(" " + (i + 1) + "." + tasks.get(i));
             }
             System.out.println("____________________________________________________________");
+
         } else if (input.startsWith("mark")) {
             int index = Integer.parseInt(input.substring(5)) - 1;
             taskList.markTaskDone(index);
@@ -68,6 +68,7 @@ public class Ui {
             System.out.println(" \uD83C\uDF37Nice! I've marked this task as done:");
             System.out.println("   " + taskList.getTasks().get(index));
             System.out.println("____________________________________________________________");
+
         } else if (input.startsWith("unmark")) {
             int index = Integer.parseInt(input.substring(7)) - 1;
             taskList.markTaskNotDone(index);
@@ -75,6 +76,7 @@ public class Ui {
             System.out.println(" \uD83C\uDF37I have marked this task as not done:");
             System.out.println("   " + taskList.getTasks().get(index));
             System.out.println("____________________________________________________________");
+
         } else if (input.startsWith("todo")) {
             String description = input.substring(5).trim();
             if (description.isEmpty()) {
@@ -86,6 +88,7 @@ public class Ui {
             System.out.println("   " + taskList.getTasks().get(taskList.getTasks().size() - 1));
             System.out.println(" \uD83C\uDF37You now have " + taskList.getTasks().size() + " tasks in the list.");
             System.out.println("____________________________________________________________");
+
         } else if (input.startsWith("deadline")) {
             String The_Rest = input.substring(9).trim();
             String[] parts = The_Rest.split(" /by ", 2);
@@ -103,6 +106,7 @@ public class Ui {
             System.out.println("   " + taskList.getTasks().get(taskList.getTasks().size() - 1));
             System.out.println(" \uD83C\uDF37You now have " + taskList.getTasks().size() + " tasks in the list.");
             System.out.println("____________________________________________________________");
+
         } else if (input.startsWith("event")) {
             String The_Rest1 = input.substring(6).trim();
             int fromIndex = The_Rest1.indexOf(" /from ");
@@ -122,6 +126,7 @@ public class Ui {
             System.out.println("   " + taskList.getTasks().get(taskList.getTasks().size() - 1));
             System.out.println(" \uD83C\uDF37You now have " + taskList.getTasks().size() + " tasks in the list.");
             System.out.println("____________________________________________________________");
+
         } else if (input.startsWith("delete")) {
             int index = Integer.parseInt(input.substring(7).trim()) - 1;
             Task removedTask = taskList.removeTask(index);
@@ -130,6 +135,18 @@ public class Ui {
             System.out.println("   " + removedTask);
             System.out.println(" Now you have " + taskList.getTasks().size() + " tasks in the list.");
             System.out.println("____________________________________________________________");
+
+        } else if (input.startsWith("find ")) {
+            String keyword = input.substring(5).trim();
+            ArrayList<Task> matches = taskList.findTasks(keyword);
+
+            System.out.println("____________________________________________________________");
+            System.out.println(" \uD83C\uDF37Here are the matching tasks in your list:");
+            for (int i = 0; i < matches.size(); i++) {
+                System.out.println(" " + (i + 1) + "." + matches.get(i));
+            }
+            System.out.println("____________________________________________________________");
+
         } else {
             throw new SakuraException("I do not know what that means.\uD83C\uDF38\uD83D\uDE22");
         }

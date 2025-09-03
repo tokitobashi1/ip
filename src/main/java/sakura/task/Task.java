@@ -20,7 +20,7 @@ public class Task {
     /**
      * Saves done status and description
      */
-    public String SavingFormat() {
+    public String savingFormat() {
         return (getDone() ? "1" : "0") + " | " + getDescription();
     }
 

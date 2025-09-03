@@ -31,7 +31,7 @@ public class Event extends Task {
     }
 
     @Override
-    public String SavingFormat() {
+    public String savingFormat() {
         return "E | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + from + " | " + to;
     }
 }

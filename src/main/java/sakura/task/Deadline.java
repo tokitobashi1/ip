@@ -1,8 +1,5 @@
 package sakura.task;
 
-import sakura.task.SakuraException;
-import sakura.task.Task;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -35,7 +32,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public String SavingFormat() {
+    public String savingFormat() {
         // Save in yyyy-MM-dd format so it can be parsed back properly
         return "D | " + (getDone() ? "1" : "0") + " | " + getDescription() + " | " + by.format(INPUT);
     }
