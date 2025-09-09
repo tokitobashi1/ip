@@ -4,7 +4,6 @@ package sakura.task;
  * Represents a To-Do task.
  */
 public class ToDo extends Task {
-
     /**
      * Constructs a ToDo with the given description.
      *
@@ -25,7 +24,7 @@ public class ToDo extends Task {
     }
 
     @Override
-    public String savingFormat() {
-        return "T | " + super.savingFormat();
+    public String saveFormat() {
+        return "T | " + super.saveFormat();
     }
 }
