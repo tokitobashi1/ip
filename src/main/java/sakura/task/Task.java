@@ -5,7 +5,7 @@ package sakura.task;
  */
 public class Task {
     private String description;
-    private boolean done;
+    private boolean Done;
 
     /**
      * Constructs a Task with the given description.
@@ -14,13 +14,13 @@ public class Task {
      */
     public Task(String description) {
         this.description = description;
-        this.done = false;
+        this.Done = false;
     }
 
     /**
      * Saves done status and description
      */
-    public String savingFormat() {
+    public String saveFormat() {
         return (getDone() ? "1" : "0") + " | " + getDescription();
     }
 
@@ -35,7 +35,7 @@ public class Task {
      * Returns whether this task is done via boolean variable
      */
     public boolean getDone() {
-        return done;
+        return Done;
     }
 
     /**
@@ -51,28 +51,28 @@ public class Task {
      * Sets the done status of this task.
      */
     public void setDone(boolean done) {
-        this.done = done;
+        this.Done = done;
     }
 
     /**
      * Returns the status symbol for this task.
      */
     public String getStatus() {
-        return (done ? "X" : " ");
+        return (Done ? "X" : " ");
     }
 
     /**
      * Marks this task as done.
      */
     public void markAsDone() {
-        this.done = true;
+        this.Done = true;
     }
 
     /**
      * Marks this task as not done.
      */
-    public void notDone() {
-        this.done = false;
+    public void NotDone() {
+        this.Done = false;
     }
 
     /**

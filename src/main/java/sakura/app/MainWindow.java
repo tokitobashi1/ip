@@ -31,35 +31,33 @@ public class MainWindow {
 
     @FXML
     public void initialize() {
-        // Auto-scroll as dialogContainer grows.
+        // auto-scroll as dialogContainer grows
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /**
-     * Injects the Sakura instance.
-     *
-     * @param sakura Sakura instance to use for responses.
-     */
-    public void setSakura(Sakura sakura) {
-        this.sakura = sakura;
+    /** Injects the Sakura instance */
+    public void setSakura(Sakura sakuraInstance) {
+        this.sakura = sakuraInstance;
     }
 
     /**
-     * Called by FXML when the user hits Enter or clicks Send.
+     * Called by FXML when user hits Enter or clicks Send.
      */
     @FXML
     private void handleUserInput() {
-        String input = userInput.getText();
-        if (input == null || input.isBlank()) {
+        String inputText = userInput.getText();
+
+        if (inputText == null || inputText.isBlank()) {
             return;
         }
 
-        String response = sakura.getResponse(input);
+        String responseText = sakura.getResponse(inputText);
 
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getSakuraDialog(response, sakuraImage)
-        );
+        // Add user dialog
+        dialogContainer.getChildren().add(DialogBox.getUserDialog(inputText, userImage));
+
+        // Add Sakura dialog
+        dialogContainer.getChildren().add(DialogBox.getSakuraDialog(responseText, sakuraImage));
 
         userInput.clear();
     }

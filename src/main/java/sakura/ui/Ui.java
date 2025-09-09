@@ -1,48 +1,43 @@
 package sakura.ui;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Scanner;
 import sakura.task.Deadline;
 import sakura.task.Event;
-import sakura.task.SakuraException;
 import sakura.task.Task;
 import sakura.task.TaskList;
 import sakura.task.ToDo;
-=======
-import java.util.*;
-import sakura.task.*;
->>>>>>> branch-Level-10
+import sakura.task.SakuraException;
 
 /**
- * Handles all user interaction and input parsing for the Sakura task manager.
+ * Handles all user interaction and input parsing for Sakura task manager.
  */
 public class Ui {
-    private Scanner sc;
+
+    private Scanner scanner;
     private TaskList taskList;
 
     /**
-     * Constructs a Ui instance with the given task list.
+     * Constructs a UI instance with the given TaskList.
      *
-     * @param taskList TaskList to be managed by this Ui.
+     * @param taskList TaskList to be managed by this UI.
      */
     public Ui(TaskList taskList) {
         this.taskList = taskList;
-        this.sc = new Scanner(System.in);
+        this.scanner = new Scanner(System.in);
     }
 
     /**
-     * Starts the UI, prompting the user for commands until "bye" is entered.
+     * Starts the user interface loop.
      */
     public void start() {
         System.out.println("____________________________________________________________");
-        System.out.println(
-                "Hi, I am your friendly bot \uD83C\uDF38Sakura\uD83C\uDF38, feel free to let me know what you need!");
+        System.out.println("Hi, I am your friendly bot \uD83C\uDF38Sakura\uD83C\uDF38, feel free to let me know what you need!");
         System.out.println("How can I assist you?");
         System.out.println("____________________________________________________________");
 
         while (true) {
-            String input = sc.nextLine().trim();
+            String input = scanner.nextLine().trim();
 
             if (input.equals("bye")) {
                 System.out.println("____________________________________________________________");
@@ -53,14 +48,13 @@ public class Ui {
 
             try {
                 processInput(input);
+            } catch (NumberFormatException e) {
+                System.out.println("____________________________________________________________");
+                System.out.println(" Please Retry: You need to enter a valid number for the task.\uD83C\uDF38\uD83D\uDE22");
+                System.out.println("____________________________________________________________");
             } catch (SakuraException e) {
                 System.out.println("____________________________________________________________");
                 System.out.println(" Error: " + e.getMessage());
-                System.out.println("____________________________________________________________");
-            } catch (NumberFormatException e) {
-                System.out.println("____________________________________________________________");
-                System.out.println(
-                        " Please Retry: You need to enter a valid number for the task.\uD83C\uDF38\uD83D\uDE22");
                 System.out.println("____________________________________________________________");
             } catch (Exception e) {
                 System.out.println("____________________________________________________________");
@@ -69,23 +63,25 @@ public class Ui {
             }
         }
 
-        sc.close();
+        scanner.close();
     }
 
     /**
-     * Processes a single user input command.
+     * Processes user input and executes commands.
      *
-     * @param input User input string.
-     * @throws SakuraException If the input format is invalid.
+     * @param input The input string from the user.
+     * @throws SakuraException If input is invalid.
      */
     private void processInput(String input) throws SakuraException {
         if (input.equals("list")) {
             System.out.println("____________________________________________________________");
             System.out.println(" \uD83C\uDF38Here are the tasks in your list\uD83C\uDF38:");
             ArrayList<Task> tasks = taskList.getTasks();
+
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println(" " + (i + 1) + "." + tasks.get(i));
             }
+
             System.out.println("____________________________________________________________");
 
         } else if (input.startsWith("mark")) {
@@ -107,8 +103,7 @@ public class Ui {
         } else if (input.startsWith("todo")) {
             String description = input.substring(5).trim();
             if (description.isEmpty()) {
-                throw new SakuraException(
-                        "\uD83C\uDF38The description of a todo cannot be empty, please reenter!!!\uD83C\uDF38");
+                throw new SakuraException("\uD83C\uDF38The description of a todo cannot be empty, please reenter!!!\uD83C\uDF38");
             }
             taskList.addTask(new ToDo(description));
             System.out.println("____________________________________________________________");
@@ -118,17 +113,15 @@ public class Ui {
             System.out.println("____________________________________________________________");
 
         } else if (input.startsWith("deadline")) {
-            String theRest = input.substring(9).trim();
-            String[] parts = theRest.split(" /by ", 2);
+            String remainder = input.substring(9).trim();
+            String[] parts = remainder.split(" /by ", 2);
             if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
                 throw new SakuraException("\uD83C\uDF38Please use the actual format properly!\uD83C\uDF38");
             }
-
             String description = parts[0].trim();
             String byString = parts[1].trim();
             Deadline newDeadline = new Deadline(description, byString);
             taskList.addTask(newDeadline);
-
             System.out.println("____________________________________________________________");
             System.out.println("  \uD83C\uDF37I have added this task:");
             System.out.println("   " + taskList.getTasks().get(taskList.getTasks().size() - 1));
@@ -136,22 +129,18 @@ public class Ui {
             System.out.println("____________________________________________________________");
 
         } else if (input.startsWith("event")) {
-            String theRest = input.substring(6).trim();
-            int fromIndex = theRest.indexOf(" /from ");
-            int toIndex = theRest.indexOf(" /to ");
-
+            String remainder = input.substring(6).trim();
+            int fromIndex = remainder.indexOf(" /from ");
+            int toIndex = remainder.indexOf(" /to ");
             if (fromIndex == -1 || toIndex == -1 || fromIndex >= toIndex) {
                 throw new SakuraException("\uD83C\uDF38Please use the actual format properly!\uD83C\uDF38");
             }
-
-            String description = theRest.substring(0, fromIndex).trim();
-            String from = theRest.substring(fromIndex + 7, toIndex).trim();
-            String to = theRest.substring(toIndex + 5).trim();
-
+            String description = remainder.substring(0, fromIndex).trim();
+            String from = remainder.substring(fromIndex + 7, toIndex).trim();
+            String to = remainder.substring(toIndex + 5).trim();
             if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
                 throw new SakuraException("\uD83C\uDF38Description, start time and end time cannot be empty.\uD83C\uDF38");
             }
-
             taskList.addTask(new Event(description, from, to));
             System.out.println("____________________________________________________________");
             System.out.println("  \uD83C\uDF37I have added this task:");
@@ -171,7 +160,6 @@ public class Ui {
         } else if (input.startsWith("find ")) {
             String keyword = input.substring(5).trim();
             ArrayList<Task> matches = taskList.findTasks(keyword);
-
             System.out.println("____________________________________________________________");
             System.out.println(" \uD83C\uDF37Here are the matching tasks in your list:");
             for (int i = 0; i < matches.size(); i++) {
