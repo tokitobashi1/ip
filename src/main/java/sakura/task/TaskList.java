@@ -49,9 +49,7 @@ public class TaskList {
      */
     public Task removeTask(int index) throws SakuraException {
         if (index < 0 || index >= tasks.size()) {
-            throw new SakuraException(
-                    "\uD83C\uDF38That task number does not exist.\uD83C\uDF38"
-            );
+            throw new SakuraException("\uD83C\uDF38That task number does not exist.\uD83C\uDF38");
         }
         Task removed = tasks.remove(index);
         storage.save(tasks);
@@ -66,9 +64,7 @@ public class TaskList {
      */
     public void markTaskDone(int index) throws SakuraException {
         if (index < 0 || index >= tasks.size()) {
-            throw new SakuraException(
-                    "\uD83C\uDF38That task number does not exist.\uD83C\uDF38"
-            );
+            throw new SakuraException("\uD83C\uDF38That task number does not exist.\uD83C\uDF38");
         }
         tasks.get(index).markAsDone();
         storage.save(tasks);
@@ -76,43 +72,27 @@ public class TaskList {
 
     /**
      * Marks the task at the given index as not done and saves the list.
-<<<<<<< HEAD
-=======
      *
      * @param index Index of the task to mark as not done.
->>>>>>> branch-Level-10
      * @throws SakuraException If the index is invalid.
      */
     public void markTaskNotDone(int index) throws SakuraException {
         if (index < 0 || index >= tasks.size()) {
-            throw new SakuraException(
-                    "\uD83C\uDF38That task number does not exist.\uD83C\uDF38"
-            );
+            throw new SakuraException("\uD83C\uDF38That task number does not exist.\uD83C\uDF38");
         }
         tasks.get(index).NotDone();
         storage.save(tasks);
     }
-<<<<<<< HEAD
-
-    /**
-     * Returns a list of tasks whose description contains the given keyword.
-=======
     /**
      * Returns a list of tasks whose description contains the given keyword.
      *
      * @param keyword The keyword to search for.
->>>>>>> branch-Level-10
      * @return ArrayList of matching tasks.
      */
     public ArrayList<Task> findTasks(String keyword) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         for (Task task : tasks) {
-<<<<<<< HEAD
-            if (task.getDescription().toLowerCase()
-                    .contains(keyword.toLowerCase())) {
-=======
             if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
->>>>>>> branch-Level-10
                 matchingTasks.add(task);
             }
         }

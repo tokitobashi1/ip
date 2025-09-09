@@ -1,4 +1,5 @@
 package sakura.app;
+
 import javafx.application.Application;
 
 /**
