@@ -6,10 +6,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
-/**
- * Controller for the main GUI.
- */
 public class MainWindow {
 
     @FXML
@@ -31,34 +32,39 @@ public class MainWindow {
 
     @FXML
     public void initialize() {
-        // auto-scroll as dialogContainer grows
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Sakura instance */
     public void setSakura(Sakura sakuraInstance) {
         this.sakura = sakuraInstance;
     }
 
-    /**
-     * Called by FXML when user hits Enter or clicks Send.
-     */
     @FXML
     private void handleUserInput() {
         String inputText = userInput.getText();
-
         if (inputText == null || inputText.isBlank()) {
             return;
         }
 
         String responseText = sakura.getResponse(inputText);
 
-        // Add user dialog
-        dialogContainer.getChildren().add(DialogBox.getUserDialog(inputText, userImage));
+        var userDialog = DialogBox.getUserDialog(inputText, userImage);
+        userDialog.getChildren().forEach(node -> {
+            if (node instanceof javafx.scene.control.Label label) {
+                label.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-font-family: 'Arial';");
+            }
+        });
+        dialogContainer.getChildren().add(userDialog);
 
-        // Add Sakura dialog
-        dialogContainer.getChildren().add(DialogBox.getSakuraDialog(responseText, sakuraImage));
+        var sakuraDialog = DialogBox.getSakuraDialog(responseText, sakuraImage);
+        sakuraDialog.getChildren().forEach(node -> {
+            if (node instanceof javafx.scene.control.Label label) {
+                label.setStyle("-fx-text-fill: lightpink; -fx-font-size: 16px; -fx-font-weight: bold; -fx-font-family: 'Arial';");
+            }
+        });
+        dialogContainer.getChildren().add(sakuraDialog);
 
         userInput.clear();
     }
+
 }
