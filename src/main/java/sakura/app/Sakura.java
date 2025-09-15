@@ -1,12 +1,17 @@
 package sakura.app;
 
 import sakura.task.SakuraException;
-
+/**
+ * The main class for the Sakura chatbot.
+ * Handles user input.
+ */
 public class Sakura {
-
-    // You probably have a TaskList or some task storage here
-    // private TaskList taskList;
-
+    /**
+     * Processes a user's input and returns the chatbot's response.
+     *
+     * @param input the raw input string from the user
+     * @return the response string from Sakura
+     */
     public String getResponse(String input) {
         input = input.trim();
 
@@ -23,7 +28,10 @@ public class Sakura {
             return "🌸 Unexpected error: " + e.getMessage();
         }
     }
-
+    /**
+     * Returns the help message showing all available commands.
+     * @return a formatted help message string
+     */
     private String getHelpMessage() {
         return """
            🌸 Here are the commands you can use:
@@ -39,11 +47,7 @@ public class Sakura {
             help                     : Show this help message
            """;
     }
-
-
-    // Placeholder for your command processing logic
     private String processCommand(String input) throws SakuraException {
-        // Implement parsing and execution of commands like list, todo, mark, etc.
         return "Sakura heard: " + input;
     }
 }
