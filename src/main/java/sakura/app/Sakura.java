@@ -16,10 +16,9 @@ public class Sakura {
         input = input.trim();
 
         if ("help".equalsIgnoreCase(input)) {
-            return getHelpMessage(); // returns the help string
+            return getHelpMessage();
         }
 
-        // Handle other commands (list, todo, deadline, etc.)
         try {
             return processCommand(input);
         } catch (SakuraException e) {
