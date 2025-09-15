@@ -16,7 +16,7 @@ public class Sakura {
 
         // Handle other commands (list, todo, deadline, etc.)
         try {
-            return processCommand(input); // implement this with your existing logic
+            return processCommand(input);
         } catch (SakuraException e) {
             return "🌸 Error: " + e.getMessage();
         } catch (Exception e) {

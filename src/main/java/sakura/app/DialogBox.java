@@ -54,13 +54,9 @@ public class DialogBox extends HBox {
     private void flip() {
         assert getChildren() != null : "DialogBox children must not be null";
 
-        // Reverse the children manually (instead of stream)
-        int size = getChildren().size();
-        for (int i = 0; i < size / 2; i++) {
-            Node temp = getChildren().get(i);
-            getChildren().set(i, getChildren().get(size - 1 - i));
-            getChildren().set(size - 1 - i, temp);
-        }
+        java.util.List<Node> tmp = new java.util.ArrayList<>(getChildren());
+        java.util.Collections.reverse(tmp);
+        getChildren().setAll(tmp);
 
         setAlignment(Pos.TOP_LEFT);
     }
